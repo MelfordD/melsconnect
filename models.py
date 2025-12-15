@@ -2,7 +2,7 @@ from datetime import datetime, date, time
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from slugify import slugify
-from app import db
+from extensions import db
 
 class User(UserMixin, db.Model):
     __tablename__ = "users"
@@ -74,7 +74,7 @@ class WorkingHour(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     business_id = db.Column(db.Integer, db.ForeignKey("businesses.id"), nullable=False)
-    day_of_week = db.Column(db.Integer, nullable=False)  # 0=Monday, 6=Sunday
+    day_of_week = db.Column(db.Integer, nullable=False)
     open_time = db.Column(db.Time, nullable=False)
     close_time = db.Column(db.Time, nullable=False)
     is_closed = db.Column(db.Boolean, default=False)
@@ -98,7 +98,7 @@ class Booking(db.Model):
     customer_email = db.Column(db.String(120))
     booking_date = db.Column(db.Date, nullable=False)
     booking_time = db.Column(db.Time, nullable=False)
-    status = db.Column(db.String(20), default="pending")  # pending, confirmed, cancelled, completed
+    status = db.Column(db.String(20), default="pending")
     notes = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     

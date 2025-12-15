@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify, abort
 from datetime import datetime, timedelta, date, time
-from app import db
+from extensions import db
 from models import Business, Service, WorkingHour, Booking
 from forms import BookingForm
 
@@ -71,7 +71,19 @@ def book(slug):
     selected_service_id = request.args.get("service_id", type=int) or (services[0].id if services else None)
     selected_date = request.args.get("date", "")
     
-    if selected_service_id and selected_date:
+    if request.method == "POST":
+        service_id = form.service_id.data
+        booking_date_str = request.form.get("booking_date", "")
+        if service_id and booking_date_str:
+            try:
+                booking_date = datetime.strptime(booking_date_str, "%Y-%m-%d").date()
+                service = Service.query.get(service_id)
+                if service and service.business_id == business.id:
+                    slots = get_available_slots(business, service, booking_date)
+                    form.booking_time.choices = [(s, s) for s in slots]
+            except ValueError:
+                pass
+    elif selected_service_id and selected_date:
         try:
             booking_date = datetime.strptime(selected_date, "%Y-%m-%d").date()
             service = Service.query.get(selected_service_id)

@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, abort
 from flask_login import login_required, current_user
 from datetime import datetime, timedelta, time
-from app import db
+from extensions import db
 from models import Business, Service, WorkingHour, Booking
 from forms import BusinessForm, ServiceForm, WorkingHourForm, BookingStatusForm
 
