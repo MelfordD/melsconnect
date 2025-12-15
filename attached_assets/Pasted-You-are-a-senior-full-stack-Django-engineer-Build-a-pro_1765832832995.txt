@@ -1,0 +1,79 @@
+You are a senior full-stack Django engineer.
+
+Build a production-ready, multi-tenant booking platform using Django that allows multiple businesses (salons, clinics, gyms, barbers) to have their own booking pages and dashboards.
+
+GOALS
+- Modern, clean, professional UI
+- Simple UX for non-technical business owners
+- Multi-tenant architecture (each business isolated by slug)
+- Easy to extend later (payments, notifications, subscriptions)
+
+TECH STACK
+- Django (latest stable)
+- Django Templates
+- SQLite for development
+- Tailwind CSS for modern UI
+- Django Authentication
+- Class-based views where appropriate
+
+CORE FEATURES (MVP)
+ADMIN (SUPERUSER)
+- Create, activate, and deactivate businesses
+- View all bookings across businesses
+- Assign owners to businesses
+
+BUSINESS OWNER
+- Login dashboard
+- Manage services (name, price, duration)
+- Set working hours
+- View, approve, and cancel bookings
+- Filter bookings by date and status
+
+CUSTOMER (PUBLIC)
+- Public booking page: /b/<business-slug>/
+- View available services
+- Pick date and time based on working hours
+- Enter name and phone number
+- Submit booking
+- See confirmation message
+
+MODELS
+- Business (name, slug, owner, phone, address, is_active)
+- Service (business, name, price, duration_minutes)
+- WorkingHour (business, day_of_week, open_time, close_time)
+- Booking (business, service, customer_name, customer_phone, date, time, status)
+- Use Django’s built-in User model
+
+FUNCTIONAL REQUIREMENTS
+- Prevent double booking
+- Only show available time slots
+- Business owners can only access their own data
+- Clean separation of concerns
+- Secure authentication & permissions
+
+UI/UX REQUIREMENTS
+- Use Tailwind CSS
+- Clean spacing, cards, buttons, and forms
+- Mobile-friendly layout
+- Dashboard-style interface for owners
+- Professional landing/booking page
+
+STRUCTURE
+- Django project with apps: accounts, businesses, bookings
+- Proper URL routing
+- Reusable templates
+- Base layout template
+- Meaningful comments in code
+
+OUTPUT
+- Full Django project structure
+- Models, views, urls, templates
+- Tailwind setup
+- Instructions to run on Replit
+- No placeholders like “TODO”
+- Code should run without errors
+
+IMPORTANT
+- Keep the MVP focused
+- Avoid over-engineering
+- Write clean, readable, maintainable code
