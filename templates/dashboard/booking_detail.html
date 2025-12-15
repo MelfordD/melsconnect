@@ -1,0 +1,78 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Booking Details - Mel's Connect{% endblock %}
+
+{% block dashboard_content %}
+<div class="mb-8">
+    <a href="{{ url_for('dashboard.bookings') }}" class="text-gray-600 hover:text-primary mb-2 inline-flex items-center">
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+        Back to Bookings
+    </a>
+    <h1 class="text-2xl font-bold text-gray-800">Booking Details</h1>
+</div>
+
+<div class="max-w-2xl">
+    <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100 mb-6">
+        <div class="grid grid-cols-2 gap-6">
+            <div>
+                <p class="text-sm text-gray-500">Customer Name</p>
+                <p class="font-medium text-gray-800">{{ booking.customer_name }}</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-500">Phone</p>
+                <p class="font-medium text-gray-800">{{ booking.customer_phone }}</p>
+            </div>
+            {% if booking.customer_email %}
+            <div>
+                <p class="text-sm text-gray-500">Email</p>
+                <p class="font-medium text-gray-800">{{ booking.customer_email }}</p>
+            </div>
+            {% endif %}
+            <div>
+                <p class="text-sm text-gray-500">Service</p>
+                <p class="font-medium text-gray-800">{{ booking.service.name }}</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-500">Date</p>
+                <p class="font-medium text-gray-800">{{ booking.booking_date.strftime('%B %d, %Y') }}</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-500">Time</p>
+                <p class="font-medium text-gray-800">{{ booking.booking_time.strftime('%H:%M') }}</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-500">Status</p>
+                <span class="px-2 py-1 text-xs font-medium rounded-full 
+                    {% if booking.status == 'pending' %}bg-yellow-100 text-yellow-800
+                    {% elif booking.status == 'confirmed' %}bg-green-100 text-green-800
+                    {% elif booking.status == 'cancelled' %}bg-red-100 text-red-800
+                    {% else %}bg-gray-100 text-gray-800{% endif %}">
+                    {{ booking.status|capitalize }}
+                </span>
+            </div>
+            <div>
+                <p class="text-sm text-gray-500">Price</p>
+                <p class="font-medium text-gray-800">${{ "%.2f"|format(booking.service.price) }}</p>
+            </div>
+        </div>
+        
+        {% if booking.notes %}
+        <div class="mt-6 pt-6 border-t border-gray-100">
+            <p class="text-sm text-gray-500 mb-2">Notes</p>
+            <p class="text-gray-700">{{ booking.notes }}</p>
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
+        <h3 class="font-medium text-gray-800 mb-4">Update Status</h3>
+        <form method="POST" class="flex items-center space-x-4">
+            {{ form.hidden_tag() }}
+            {{ form.status(class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none") }}
+            <button type="submit" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-secondary transition">Update</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends "admin/base.html" %}
+
+{% block title %}All Bookings - Admin - Mel's Connect{% endblock %}
+
+{% block admin_content %}
+<div class="mb-8">
+    <h1 class="text-2xl font-bold text-gray-800">All Bookings</h1>
+    <p class="text-gray-600">View bookings across all businesses</p>
+</div>
+
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 mb-6">
+    <div class="p-4 border-b border-gray-100">
+        <form method="GET" class="flex flex-wrap gap-4">
+            <div>
+                <label class="block text-sm text-gray-600 mb-1">Business</label>
+                <select name="business" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none">
+                    <option value="all">All Businesses</option>
+                    {% for b in businesses %}
+                    <option value="{{ b.id }}" {% if business_filter == b.id|string %}selected{% endif %}>{{ b.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm text-gray-600 mb-1">Status</label>
+                <select name="status" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none">
+                    <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All</option>
+                    <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+                    <option value="confirmed" {% if status_filter == 'confirmed' %}selected{% endif %}>Confirmed</option>
+                    <option value="cancelled" {% if status_filter == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                    <option value="completed" {% if status_filter == 'completed' %}selected{% endif %}>Completed</option>
+                </select>
+            </div>
+            <div class="flex items-end">
+                <button type="submit" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-secondary transition">Filter</button>
+                {% if status_filter != 'all' or business_filter != 'all' %}
+                <a href="{{ url_for('admin.bookings') }}" class="ml-2 px-4 py-2 text-gray-600 hover:text-gray-800">Clear</a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="bg-white rounded-xl shadow-sm border border-gray-100">
+    {% if bookings %}
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Business</th>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service</th>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date & Time</th>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                {% for booking in bookings %}
+                <tr>
+                    <td class="px-6 py-4">
+                        <p class="font-medium text-gray-800">{{ booking.customer_name }}</p>
+                        <p class="text-sm text-gray-500">{{ booking.customer_phone }}</p>
+                    </td>
+                    <td class="px-6 py-4 text-gray-700">{{ booking.business.name }}</td>
+                    <td class="px-6 py-4 text-gray-700">{{ booking.service.name }}</td>
+                    <td class="px-6 py-4 text-gray-700">
+                        {{ booking.booking_date.strftime('%b %d, %Y') }}<br>
+                        <span class="text-sm text-gray-500">{{ booking.booking_time.strftime('%H:%M') }}</span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="px-2 py-1 text-xs font-medium rounded-full 
+                            {% if booking.status == 'pending' %}bg-yellow-100 text-yellow-800
+                            {% elif booking.status == 'confirmed' %}bg-green-100 text-green-800
+                            {% elif booking.status == 'cancelled' %}bg-red-100 text-red-800
+                            {% else %}bg-gray-100 text-gray-800{% endif %}">
+                            {{ booking.status|capitalize }}
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="p-12 text-center">
+        <p class="text-gray-500">No bookings found</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

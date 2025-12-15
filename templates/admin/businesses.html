@@ -1,0 +1,71 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Businesses - Admin - Mel's Connect{% endblock %}
+
+{% block admin_content %}
+<div class="flex items-center justify-between mb-8">
+    <div>
+        <h1 class="text-2xl font-bold text-gray-800">Businesses</h1>
+        <p class="text-gray-600">Manage all businesses on the platform</p>
+    </div>
+    <a href="{{ url_for('admin.add_business') }}" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-secondary transition flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        Add Business
+    </a>
+</div>
+
+<div class="bg-white rounded-xl shadow-sm border border-gray-100">
+    {% if businesses %}
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Business</th>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Owner</th>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Slug</th>
+                    <th class="px-6 py-4 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                {% for business in businesses %}
+                <tr class="{% if not business.is_active %}opacity-50{% endif %}">
+                    <td class="px-6 py-4">
+                        <p class="font-medium text-gray-800">{{ business.name }}</p>
+                        {% if business.phone %}
+                        <p class="text-sm text-gray-500">{{ business.phone }}</p>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4 text-gray-700">{{ business.owner.full_name }}</td>
+                    <td class="px-6 py-4">
+                        {% if business.is_active %}
+                        <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">Active</span>
+                        {% else %}
+                        <span class="px-2 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4">
+                        <a href="{{ url_for('booking.public_page', slug=business.slug) }}" target="_blank" class="text-primary hover:underline">/b/{{ business.slug }}</a>
+                    </td>
+                    <td class="px-6 py-4 text-right space-x-2">
+                        <a href="{{ url_for('admin.edit_business', business_id=business.id) }}" class="text-primary hover:text-secondary">Edit</a>
+                        <form action="{{ url_for('admin.toggle_business', business_id=business.id) }}" method="POST" class="inline">
+                            <button type="submit" class="{% if business.is_active %}text-red-500 hover:text-red-700{% else %}text-green-500 hover:text-green-700{% endif %}">
+                                {% if business.is_active %}Deactivate{% else %}Activate{% endif %}
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="p-12 text-center">
+        <p class="text-gray-500">No businesses yet</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
