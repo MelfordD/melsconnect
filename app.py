@@ -1,10 +1,15 @@
 import os
 from flask import Flask
 from extensions import db, login_manager
+from flask_sqlalchemy import SQLAlchemy
+
+
+
+db = SQLAlchemy()
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SESSION_SECRET") or "dev-secret-key-change-in-production"
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL") or "sqlite:///local.db"
 app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
     "pool_recycle": 300,
     "pool_pre_ping": True,
