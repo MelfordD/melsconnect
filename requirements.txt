@@ -5,5 +5,5 @@ Flask-WTF
 Jinja2
 python-dotenv
 gunicorn
-slugify
+python-slugify
 email_validator
