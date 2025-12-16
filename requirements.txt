@@ -4,3 +4,4 @@ Flask-SQLAlchemy
 Flask-WTF
 Jinja2
 python-dotenv
+gunicorn
